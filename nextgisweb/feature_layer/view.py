@@ -127,6 +127,12 @@ def store_collection(layer, request):
     if like != '':
         query.like(like)
 
+    in_ = request.params.get('in', '')
+    if in_ != '':
+        in_ = json.loads(in_)
+        query.in_(in_.get('attribute'),
+                  in_.get('values'))
+
     sort_re = re.compile(r'sort\(([+-])%s(\w+)\)' % (field_prefix, ))
     sort = sort_re.search(urllib.unquote(request.query_string))
     if sort:
@@ -322,7 +328,9 @@ def setup_pyramid(comp, config):
             ),
             search=dict(
                 nominatim=self.settings['search.nominatim']
-            )
+            ),
+            filter=dict(
+                limit=self.settings['filter.limit'])
         )
 
     comp.client_settings = MethodType(client_settings, comp, comp.__class__)
