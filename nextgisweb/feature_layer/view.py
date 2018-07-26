@@ -228,7 +228,7 @@ def setup_pyramid(comp, config):
             else:
                 query = layer.feature_query()
                 query.intersects(geom)
-                query.filter_json(queries[idx])
+                query.filter_by_query(queries[idx])
 
                 # Limit number of identifyable features by 10 per layer,
                 # otherwise the response might be too big.
